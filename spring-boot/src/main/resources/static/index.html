@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="css/cofidis.css">
+	<script src="js/cofidis2.js"></script>
+	<script src="js/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+
+
+<div id="demo">
+	<h1>Insert your code to access Route Number Rotation Config</h1>
+	<input type="text" name="userName" id="userId">
+	<input type="password" name="accessName" id="accessId">
+	<button type="button" onclick="getIn($('#accessId')[0].value,$('#userId')[0].value);">Get In!</button>
+	<div id="result">
+	</div>
+</div>
+
+<div id="loading">
+  <img id="loading-image" src="images/ajax-loader.gif" alt="Loading..." />
+</div>
+
+<div class="none" id="user">
+	<h1 Route Lists Configured in Call Manager></h1>
+	<h2>Route List</h2>
+	<h3><span id="route0"></span></h3>
+	<select id="rgs" onchange="reloadRG();">
+		<option value="0">none</option>;
+	</select>
+</div>
+<div class="none" id="userContents">
+	<h4> Route Group <span id="rg0">testRouteGroup</span></h4>
+	<h5> Current Number Mask: <span id="mask0">testRouteGroupMask</span></h5>
+	<textarea id="r0rg0" rows="8" cols="50"></textarea>
+	<button type="button" onclick="updateRG($('#route0')[0].innerHTML,$('#rg0')[0].innerHTML,$('#r0rg0').value)">Update</button>
+	<BR>
+	<button type="button" onclick="getOut(username)">Get Out!</button>
+</div>
+
+<script>
+
+window.onload=function(){
+    $('#loading').hide();
+}
+
+var url 		= "http://localhost:8098/";
+var username 	= "";
+var data 		= "";
+
+function reloadRG(){
+  		getUserRoutes(username);
+}
+
+function getIn(code,user) {
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			username = this.responseText;
+			if(this.responseText==user){
+				document.getElementById("demo").style.display = "none";
+				document.getElementById("user").style.display = "block";
+				getUserRoutesAndFill(username);
+			}else{
+				document.getElementById("result").innerHTML = "Auth Error";
+			}
+		}else{
+			
+		}
+	};
+	xhttp.open("GET", url+"account?token=1234567890qwertyuiop&username="+user+"&passwd="+code, true);
+	xhttp.send();
+}
+
+function getOut(user) {
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			document.getElementById("demo").style.display = "block";
+			document.getElementById("user").style.display = "none";
+			document.getElementById("userContents").style.display = "none";
+		}else{
+			
+		}
+	};
+	xhttp.open("GET", url+"account/out?token=1234567890qwertyuiop&username="+user, true);
+	xhttp.send();
+}
+
+
+function updateRG(routeName, rgName, phoneList) {
+	var numbers 			= document.getElementById("r0rg0").value;
+	var numbersArrayNL 		= numbers.split("\n");
+	var numbersArrayComma 	= numbers.split(",");
+	
+	var numbersArray 		= null;
+	if(numbersArrayNL.length >= numbersArrayComma.length){
+		numbersArray = numbersArrayNL;
+	}else{
+		numbersArray = numbersArrayComma;
+	}
+	var nan = checkIfNotNumbers(numbersArray);
+	if(nan != ''){
+		alert("invalid input: "+nan+" - Letters and Special chars are not allowed");
+		return;
+	}
+	console.log(numbersArray);
+
+	var jsonHeader 	= '{"routeGroupName":"'+rgName+'","routeGroupNumbers":[';
+	var jsonBody 	= '';
+	var jsonFooter 	= '}]}';
+	for(var i=0; i<numbersArray.length;i++){
+		jsonBody 	+= '{"id":'+(i+1)+',"phoneNumber":"'+numbersArray[i].trim()+'"},';
+	}
+	var jsonToSend 	= jsonHeader + jsonBody.substring(0,jsonBody.length-2) + jsonFooter;
+
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			document.getElementById("user").style.display = this.responseText;
+		}
+	};
+	xhttp.open("POST", url+username+"/routes/"+routeName+"?token=1234567890qwertyuiop", true);
+	xhttp.setRequestHeader("Content-type", "application/json");
+  	xhttp.send(jsonToSend);
+}
+
+function getUserRoutesAndFill(username) {
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			data =JSON.parse(this.response);
+			console.log(data);
+			var options = "";
+			for (var i = 0; i < data['routeGroup'].length; i++) {
+				options += '<option value="' + i + '">' + data['routeGroup'][i]['routeGroupName'] + '</option>';
+			}
+			$("select#rgs").html(options);
+			reloadRG();
+		}
+	};
+	xhttp.open("GET", url+username+"/routes?token=1234567890qwertyuiop", true);
+	xhttp.send();
+}
+
+function getUserRoutes(username) {
+	data="";
+	document.getElementById("userContents").style.display = "none";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			data =JSON.parse(this.response);
+			console.log(data);
+			var value = document.getElementById("rgs").value;
+			$('#route0')[0].innerHTML 	= data['routeName'];
+			$('#rg0')[0].innerHTML 		= data['routeGroup'][value]['routeGroupName'];
+			$('#mask0')[0].innerHTML 	= data['routeGroup'][value]['maskNumber'];
+			var phoneNumbers = data['routeGroup'][value]['routeGroupNumbers'].map(function(item) {
+				return item['phoneNumber'];
+			});
+			document.getElementById("r0rg0").value 			= phoneNumbers.toString();
+
+			var options = "";
+			for (var i = 0; i < data['routeGroup'].length; i++) {
+				options += '<option value="' + i + '">' + data['routeGroup'][i]['routeGroupName'] + '</option>';
+			}
+
+			document.getElementById("userContents").style.display = "block";
+		}
+	};
+	xhttp.open("GET", url+username+"/routes?token=1234567890qwertyuiop", true);
+	xhttp.send();
+}
+
+function checkIfNotNumbers(numbersArray){
+	console.log(numbersArray);
+	for (var i = 0; i < numbersArray.length; i++) {
+		if(isNaN(numbersArray[i])){
+			return numbersArray[i];
+		}
+	}
+	return '';
+}
+</script>
+
+</body>
+</html>
