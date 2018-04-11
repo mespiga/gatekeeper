@@ -44,6 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
+            .antMatchers("/events/tags")
+            .antMatchers("/tags")
             .antMatchers("/room")
             .antMatchers("/rooms")
             .antMatchers("/event")

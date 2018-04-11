@@ -20,6 +20,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Collections;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -41,6 +42,7 @@ import app.connectors.ConnectionUtils;
 import app.data.jpa.domain.Observation;
 import app.data.jpa.domain.Room;
 import app.data.jpa.domain.Event;
+import app.data.jpa.domain.Tag;
 import app.data.jpa.domain.EventTop;
 
 import app.data.jpa.repository.ObservationRepository;
@@ -207,6 +209,36 @@ public class CMXController {
             List<EventTop>        result        = new ArrayList<EventTop>();
             result = this.getEventCount();
             log.info("getTop3Events() | END ");
+            return result.subList(0,2);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/events/desc", produces = { "application/json", "text/json" })
+    public List<EventTop> getEventsDesc() {
+        log.info("getEventsDesc() | START |");
+        try {
+            List<EventTop>        result        = new ArrayList<EventTop>();
+            result = this.getEventCount();
+            log.info("getEventsDesc() | END ");
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/events/tags", produces = { "application/json", "text/json" })
+    public List<Tag> getTags() {
+        log.info("getTags() | START |");
+        try {
+            List<Tag>        result        = new ArrayList<Tag>();
+            result = this.getTagCount();
+            log.info("getTags() | END ");
             return result;
         } catch (Exception e) {
             e.printStackTrace();
@@ -231,24 +263,51 @@ public class CMXController {
 
     private List<EventTop> getEventCount(){
         try{
+            Boolean               prod          = false;
             List<EventTop>        result        = new ArrayList<EventTop>();
             List<Event>           events        = this.eventRepository.findAll();
 
-            // events = null;
-            // if(events == null || events.size() == 0){
-            //     result.add(new EventTop(new Event("Connect to Create", "SUSIE WEE | VP & CTO, Cisco, DevNet", this.convertStringToLocalDateTime("2018-04-10 09:00:00"), this.convertStringToLocalDateTime("2018-04-10 10:00:00"), "Java, Docker", 1L, "https://www.devnetcreate.io/2018/resources/images/speakers/SusieWee.jpg"), 50));
-            //     result.add(new EventTop(new Event("Tickets and Silos Ruin Everything", "DAMON EDWARDS | Chief Product Officer, Rundeck, Inc.", this.convertStringToLocalDateTime("2018-04-10 10:15:00"), this.convertStringToLocalDateTime("2018-04-10 11:00:00"), "Java, Docker", 1L, "https://www.devnetcreate.io/2018/resources/images/speakers/DamonEdwards.jpg"), 30));
-            //     result.add(new EventTop(new Event("Architecting Your App and Your Pipeline for Continuous Delivery - 10 Do's for Successful DevOps", "ANDERS WALLGREN | Chief Technology Officer, Electric Cloud", this.convertStringToLocalDateTime("2018-04-10 11:15:00"), this.convertStringToLocalDateTime("2018-04-10 12:00:00"), "Java, Docker", 1L, "https://www.devnetcreate.io/2018/resources/images/speakers/AndersWallgren.jpg"), 20));
-            //     return result;
-            // }
-
             for(Event event: events){
-                Room              room          = this.roomRepository.findById(event.getRoomId());
-                List<Observation> observations  = this.observationRepository.findDistinctObservationsByTimestampBetweenAndXBetweenAndYBetween(event.getStartDate(), 
-                                                    event.getEndDate(), room.getX1Min(), room.getX1Max(), room.getY1Min(), room.getY1Max());
-                log.error("observations size: ", observations.size());
-                result.add(new EventTop(event, observations.size()));                
+                if(prod){
+                    Room              room          = this.roomRepository.findById(event.getRoomId());
+                    List<Observation> observations  = this.observationRepository.findDistinctObservationsByTimestampAndXBetweenAndYBetween(event.getStartDate(), 
+                                                        event.getEndDate(), room.getX1Min(), room.getX1Max(), room.getY1Min(), room.getY1Max());
+                    log.error("observations size: ", observations.size());
+                    result.add(new EventTop(event, observations.size()));
+                }else{
+                    result.add(new EventTop(event, (int)(Math.random() * 200 + 10) ) );
+                }           
             }
+            Collections.sort(result);
+            return result;
+        }catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            return null;
+        }
+
+    }
+
+     private List<Tag> getTagCount(){
+        try{
+            Boolean               prod          = false;
+            List<Tag>             result        = new ArrayList<Tag>();
+            List<Event>           events        = this.eventRepository.findAll();
+
+            // for(Event event: events){
+            //     if(prod){
+            //         // String[] parts = event.getTags().split(",");
+            //     }else{
+            //         result.add(new Tag("Java", (int)(Math.random() * 50 + 10) ) );
+            //     }           
+            // }
+            result.add(new Tag("Java", (int)(Math.random() * 50 + 10) ) );
+            result.add(new Tag("Docker", (int)(Math.random() * 50 + 10) ) );
+            result.add(new Tag("Microservices", (int)(Math.random() * 50 + 10) ) );
+            result.add(new Tag("CCNA", (int)(Math.random() * 50 + 10) ) );
+            result.add(new Tag("CCIE", (int)(Math.random() * 50 + 10) ) );
+            result.add(new Tag("MapWise", (int)(Math.random() * 50 + 10) ) );
+            Collections.sort(result);
             return result;
         }catch (Exception e) {
             e.printStackTrace();
