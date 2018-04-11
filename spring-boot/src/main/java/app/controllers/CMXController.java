@@ -41,12 +41,15 @@ import app.connectors.ConnectionUtils;
 import app.data.jpa.domain.Observation;
 import app.data.jpa.domain.Room;
 import app.data.jpa.domain.Event;
+import app.data.jpa.domain.EventTop;
 
 import app.data.jpa.repository.ObservationRepository;
 import app.data.jpa.repository.RoomRepository;
 import app.data.jpa.repository.EventRepository;
 import app.services.cmx.CmxNotificationSubscriptionAPI;
 import app.utils.GetProperties;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 
@@ -88,7 +91,7 @@ public class CMXController {
             String apmac = (String) jsonObject.get("apMacAddress");
 
 		
-			Observation obs = new Observation( macadr, x, y, unc, ts, os, apmac) ;
+			Observation obs = new Observation( macadr, x, y, unc, this.convertStringToLocalDateTime(ts), os, apmac) ;
             this.observationRepository.save(obs);
 		
 		} catch (Exception e) {
@@ -133,13 +136,19 @@ public class CMXController {
             JSONObject jsonObject = (JSONObject) parser.parse(eventIn);
             String name = (String) jsonObject.get("name");
             String speaker = (String) jsonObject.get("speaker");
+            String speakerImgUrl = (String) jsonObject.get("speakerImgUrl");
+            if(speakerImgUrl==null){
+                speakerImgUrl="https://cdn.elderlawanswers.com/common/uploads/photos/default-avatar.jpg";
+            }
             String startDate = (String) jsonObject.get("startDate");
-            String endDate = (String) jsonObject.get("startDate");
+            String endDate = (String) jsonObject.get("endDate");
             String tags = (String) jsonObject.get("tags");
-            String roomId = (String) jsonObject.get("roomId");
+            Long roomId = (Long) jsonObject.get("roomId");
 
         
-            Event event = new Event( name, speaker, startDate, endDate, tags, roomId) ;
+            Event event = new Event( name, speaker, 
+                this.convertStringToLocalDateTime(startDate),
+                this.convertStringToLocalDateTime(endDate), tags, roomId, speakerImgUrl) ;
             this.eventRepository.save(event);
         
         } catch (Exception e) {
@@ -189,6 +198,34 @@ public class CMXController {
         }
         log.info("getAllRooms() | END ");
         return result;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/events/top3", produces = { "application/json", "text/json" })
+    public List<EventTop> getTop3Events() {
+        log.info("getTop3Events() | START |");
+        try {
+            List<EventTop>        result        = null;
+            List<Event>           events        = this.eventRepository.findAll();
+
+            for(Event event: events){
+                Room              room          = this.roomRepository.findById(event.getRoomId());
+                List<Observation> observations  = this.observationRepository.findDistinctObservationsByTimestampBetweenAndXGreaterThan(event.getStartDate(), 
+                                                    event.getEndDate(), room.getX1Min());
+                result.add(new EventTop(event, observations.size()));
+            }
+            log.info("getTop3Events() | END ");
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
+    private static LocalDateTime convertStringToLocalDateTime(String date) {
+        date = date.substring(0,10)+ " " + date.substring(11,19);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return LocalDateTime.parse(date, formatter);
     }
 	
 	

@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.List;
 import java.util.ArrayList;
+import java.time.LocalDateTime;
 
 @Entity
 public class Observation {
@@ -33,11 +34,11 @@ public class Observation {
     @Getter @Setter public String x;
     @Getter @Setter public String y;
     @Getter @Setter public String unc;
-    @Getter @Setter public String timestamp;
+    @Getter @Setter public LocalDateTime timestamp;
     @Getter @Setter public String os;
     @Getter @Setter public String apMac;
 
-    public Observation(String macAddress, String x, String y, String unc, String timestamp, String os, String apMac) {
+    public Observation(String macAddress, String x, String y, String unc, LocalDateTime timestamp, String os, String apMac) {
         this.macAddress = macAddress;
         this.x = x;
         this.y = y;

@@ -48,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/rooms")
             .antMatchers("/event")
             .antMatchers("/events")
+            .antMatchers("/events/*")
             .antMatchers("/observation")
             .antMatchers("/observations") 
             .antMatchers("/api/user")

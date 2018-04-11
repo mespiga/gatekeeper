@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 import java.util.List;
 import java.util.ArrayList;
+import java.time.LocalDateTime;
 
 @Entity
 public class Event {
@@ -31,18 +32,20 @@ public class Event {
 
     @Getter @Setter public String name;
     @Getter @Setter public String speaker;
-    @Getter @Setter public String startDate;
-    @Getter @Setter public String endDate;
+    @Getter @Setter public String speakerImgUrl;
+    @Getter @Setter public LocalDateTime startDate;
+    @Getter @Setter public LocalDateTime endDate;
     @Getter @Setter public String tags;
-    @Getter @Setter public String roomId;
+    @Getter @Setter public Long roomId;
 
-    public Event(String name, String speaker, String startDate, String endDate, String tags, String roomId) {
+    public Event(String name, String speaker, LocalDateTime startDate, LocalDateTime endDate, String tags, Long roomId, String speakerImgUrl) {
         this.name = name;
         this.speaker = speaker;
         this.startDate = startDate;
         this.endDate = endDate;
         this.tags = tags;
         this.roomId = roomId;
+        this.speakerImgUrl = speakerImgUrl;
     }
 
     public Event() {
