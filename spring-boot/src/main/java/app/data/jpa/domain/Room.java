@@ -30,13 +30,13 @@ public class Room {
     public Long id;
 
     @Getter @Setter public String name;
-    @Getter @Setter public String x1Min;
-    @Getter @Setter public String x1Max;
-    @Getter @Setter public String y1Min;
-    @Getter @Setter public String y1Max;
+    @Getter @Setter public Double x1Min;
+    @Getter @Setter public Double x1Max;
+    @Getter @Setter public Double y1Min;
+    @Getter @Setter public Double y1Max;
     @Getter @Setter public String sparkRoomId;
 
-    public Room(String name, String xMin, String yMin, String xMax, String yMax, String sparkRoomId) {
+    public Room(String name, Double xMin, Double yMin, Double xMax, Double yMax, String sparkRoomId) {
         this.name = name;
         this.x1Min = xMin;
         this.y1Min = yMin;

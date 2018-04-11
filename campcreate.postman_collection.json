@@ -10,7 +10,7 @@
 		{
 			"name": "Add observation",
 			"request": {
-				"url": "http://ec2-18-184-32-172.eu-central-1.compute.amazonaws.com:8088/observation",
+				"url": "http://{{url}}:8088/observation",
 				"method": "POST",
 				"header": [
 					{
@@ -21,7 +21,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \"apMacAddress\": \"34:13:e8:35:48:69\",\n\"clientMacAddress\": \"63.81278716934061\",\n\"clientX\": \"16.439235436147953\",\n\"clientY\": \"17.385754862711938\",\n\"clientUncert\": \"2018-04-10T22:11:05Z\",\n\"clientTimeStamp\": \"null\",\n\"clientOs\": \"undefined\" }"
+					"raw": "{ \"apMacAddress\": \"34:13:e8:35:48:69\",\n\"clientMacAddress\": \"63.81278716934061\",\n\"clientX\": \"16.439235436147953\",\n\"clientY\": \"17.385754862711938\",\n\"clientUncert\": \"null\",\n\"clientTimeStamp\": \"2018-04-10T22:11:05Z\",\n\"clientOs\": \"undefined\" }"
 				},
 				"description": ""
 			},
@@ -30,7 +30,7 @@
 		{
 			"name": "Add event",
 			"request": {
-				"url": "http://ec2-18-184-32-172.eu-central-1.compute.amazonaws.com:8088/event",
+				"url": "http://{{url}}:8088/event",
 				"method": "POST",
 				"header": [
 					{
@@ -41,7 +41,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \n\t\"name\": \"event name\",\n\"speaker\": \"David | AWS\",\n\"startDate\": \"2018-04-10T10:15:00Z\",\n\"endDate\": \"2018-04-10T11:00:00Z\",\n\"tags\": \"java, docker\",\n\"roomId\": \"1\"\n}\n"
+					"raw": "{ \n\t\"name\": \"event name\",\n\"speaker\": \"David | AWS\",\n\"speakerImgUrl\":\"http://someimage\",\n\"startDate\": \"2018-04-10T10:15:00Z\",\n\"endDate\": \"2018-04-10T11:00:00Z\",\n\"tags\": \"java, docker\",\n\"roomId\": \"1\"\n}\n"
 				},
 				"description": ""
 			},
@@ -50,7 +50,7 @@
 		{
 			"name": "Add room",
 			"request": {
-				"url": "http://ec2-18-184-32-172.eu-central-1.compute.amazonaws.com:8088/room",
+				"url": "http://{{url}}:8088/room",
 				"method": "POST",
 				"header": [
 					{
@@ -61,7 +61,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \n\"name\": \"room name\",\n\"xMin\": \"16.439235436147953\",\n\"yMin\": \"16.439235436147953\",\n\"xMax\": \"26.439235436147953\",\n\"yMax\": \"26.439235436147953\",\n\"sparkRoomId\" : \"132ee13e\"\n}\n\n"
+					"raw": "{ \n\"name\": \"room name\",\n\"xMin\": \"16.439235436147953\",\n\"yMin\": \"16.439235436147953\",\n\"xMax\": \"26.439235436147953\",\n\"yMax\": \"26.439235436147953\",\n\"sparkRoomId\" : \"1ec43\"\n}\n\n"
 				},
 				"description": ""
 			},
@@ -70,7 +70,7 @@
 		{
 			"name": "get rooms",
 			"request": {
-				"url": "http://ec2-18-184-32-172.eu-central-1.compute.amazonaws.com:8088/rooms",
+				"url": "http://{{url}}:8088/rooms",
 				"method": "GET",
 				"header": [
 					{
@@ -90,7 +90,7 @@
 		{
 			"name": "get events",
 			"request": {
-				"url": "http://ec2-18-184-32-172.eu-central-1.compute.amazonaws.com:8088/events",
+				"url": "http://{{url}}:8088/events",
 				"method": "GET",
 				"header": [
 					{
@@ -110,7 +110,7 @@
 		{
 			"name": "get observations",
 			"request": {
-				"url": "http://ec2-18-184-32-172.eu-central-1.compute.amazonaws.com:8088/observations",
+				"url": "http://{{url}}:8088/observations",
 				"method": "GET",
 				"header": [
 					{

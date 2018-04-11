@@ -91,7 +91,7 @@ public class CMXController {
             String apmac = (String) jsonObject.get("apMacAddress");
 
 		
-			Observation obs = new Observation( macadr, x, y, unc, this.convertStringToLocalDateTime(ts), os, apmac) ;
+			Observation obs = new Observation( macadr, Double.parseDouble(x), Double.parseDouble(y), unc, this.convertStringToLocalDateTime(ts), os, apmac) ;
             this.observationRepository.save(obs);
 		
 		} catch (Exception e) {
@@ -116,7 +116,7 @@ public class CMXController {
             String yMax = (String) jsonObject.get("yMax");
             String sparkRoomId = (String) jsonObject.get("sparkRoomId");
         
-            Room room = new Room( name, xMin, yMin, xMax, yMax, sparkRoomId) ;
+            Room room = new Room( name, Double.parseDouble(xMin), Double.parseDouble(yMin), Double.parseDouble(xMax), Double.parseDouble(yMax), sparkRoomId);
             this.roomRepository.save(room);
         
         } catch (Exception e) {
@@ -143,12 +143,12 @@ public class CMXController {
             String startDate = (String) jsonObject.get("startDate");
             String endDate = (String) jsonObject.get("endDate");
             String tags = (String) jsonObject.get("tags");
-            Long roomId = (Long) jsonObject.get("roomId");
+            String roomId = (String) jsonObject.get("roomId");
 
         
             Event event = new Event( name, speaker, 
                 this.convertStringToLocalDateTime(startDate),
-                this.convertStringToLocalDateTime(endDate), tags, roomId, speakerImgUrl) ;
+                this.convertStringToLocalDateTime(endDate), tags, Long.parseLong(roomId), speakerImgUrl) ;
             this.eventRepository.save(event);
         
         } catch (Exception e) {
