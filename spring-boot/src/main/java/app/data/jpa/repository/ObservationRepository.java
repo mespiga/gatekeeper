@@ -10,6 +10,6 @@ public interface ObservationRepository extends CrudRepository<Observation, Long>
 
     public Observation findByMacAddress(String macAddress);
     public List<Observation> findAll();
-    public List<Observation> findDistinctObservationsByTimestampBetweenAndXGreaterThan(LocalDateTime startDate, LocalDateTime endDate, Double x1Min);
+    public List<Observation> findDistinctObservationsByTimestampBetweenAndXBetweenAndYBetween(LocalDateTime startDate, LocalDateTime endDate, Double x1Min,Double x1Max, Double y1Min, Double y1Max);
 
 }
