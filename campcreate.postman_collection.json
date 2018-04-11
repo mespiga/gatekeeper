@@ -41,7 +41,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \n\t\"name\": \"event name\",\n\"speaker\": \"David | AWS\",\n\"speakerImgUrl\":\"http://someimage\",\n\"startDate\": \"2018-04-10T10:15:00Z\",\n\"endDate\": \"2018-04-10T11:00:00Z\",\n\"tags\": \"java, docker\",\n\"roomId\": \"1\"\n}\n"
+					"raw": "{ \n\t\"name\": \"event name\",\n\"speaker\": \"David | AWS\",\n\"speakerImgUrl\":\"https://www.devnetcreate.io/2018/resources/images/speakers/DamonEdwards.jpg\",\n\"startDate\": \"2018-04-10T10:15:00Z\",\n\"endDate\": \"2018-04-10T11:00:00Z\",\n\"tags\": \"java, docker\",\n\"roomId\": \"1\"\n}\n"
 				},
 				"description": ""
 			},
@@ -111,6 +111,66 @@
 			"name": "get observations",
 			"request": {
 				"url": "http://{{url}}:8088/observations",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n\t\"name\": \"room name\",\n\"xMin\": \"16.439235436147953\",\n\"yMin\": \"16.439235436147953\",\n\"xMax\": \"26.439235436147953\",\n\"yMax\": \"26.439235436147953\"\n}\n\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get top3",
+			"request": {
+				"url": "http://{{url}}:8088/events/top3",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n\t\"name\": \"room name\",\n\"xMin\": \"16.439235436147953\",\n\"yMin\": \"16.439235436147953\",\n\"xMax\": \"26.439235436147953\",\n\"yMax\": \"26.439235436147953\"\n}\n\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get desc",
+			"request": {
+				"url": "http://{{url}}:8088/events/desc",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n\t\"name\": \"room name\",\n\"xMin\": \"16.439235436147953\",\n\"yMin\": \"16.439235436147953\",\n\"xMax\": \"26.439235436147953\",\n\"yMax\": \"26.439235436147953\"\n}\n\n"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "get tags",
+			"request": {
+				"url": "http://{{url}}:8088/events/tags",
 				"method": "GET",
 				"header": [
 					{

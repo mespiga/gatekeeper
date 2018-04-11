@@ -209,7 +209,7 @@ public class CMXController {
             List<EventTop>        result        = new ArrayList<EventTop>();
             result = this.getEventCount();
             log.info("getTop3Events() | END ");
-            return result.subList(0,2);
+            return result.size()>3?result.subList(0,3):result;
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
@@ -246,20 +246,6 @@ public class CMXController {
             return null;
         }
     }
-
-    // @RequestMapping(method = RequestMethod.GET, path = "/events/ordered", produces = { "application/json", "text/json" })
-    // public List<EventTop> getEventsOrderByCountDesc() {
-    //     log.info("getEventsOrderByCountDesc() | START |");
-    //     try {
-    //         List<EventTop>        result        = new ArrayList<EventTop>();
-    //         log.info("getEventsOrderByCountDesc() | END ");
-    //         return result;
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         log.error(e.getMessage());
-    //         return null;
-    //     }
-    // }
 
     private List<EventTop> getEventCount(){
         try{
